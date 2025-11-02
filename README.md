@@ -729,7 +729,7 @@ This project is licensed under the MIT License.
 
 ## 🎉 Credits
 
-**Created by:** _0ryn_ (now customizable with `/setfooter`)
+**Created by:** t6200
 
 **Synergy Bot** - The Ultimate All-in-One Discord Bot
 
