@@ -1,0 +1,5 @@
+discord.py>=2.3.2
+python-dotenv>=1.0.0
+emoji>=2.6.0
+pytz>=2023.3
+python-dateutil>=2.8.2
