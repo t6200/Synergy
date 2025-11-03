@@ -48,8 +48,7 @@ class SynergyBot(commands.Bot):
             'cogs.welcome',
             'cogs.leveling',
             'cogs.reactionroles',
-            'cogs.giveaways',
-            'cogs.music'
+            'cogs.giveaways'
         ]
         self.data = {}
         self.load_data()

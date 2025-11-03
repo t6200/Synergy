@@ -8,6 +8,7 @@ from typing import Optional, Literal
 class Economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        # Custom cooldown mapping that works with interactions
         self.daily_cooldown = commands.CooldownMapping.from_cooldown(
             1, 86400, commands.BucketType.user  # 24 hours cooldown
         )
@@ -17,6 +18,16 @@ class Economy(commands.Cog):
         self.crime_cooldown = commands.CooldownMapping.from_cooldown(
             1, 7200, commands.BucketType.user  # 2 hours cooldown
         )
+        
+    def _get_cooldown_bucket(self, interaction, cooldown_mapping):
+        """Helper method to get cooldown bucket for interactions"""
+        # Create a mock message with the author attribute that cooldown expects
+        mock_ctx = type('MockContext', (), {
+            'author': interaction.user,
+            'guild': interaction.guild,
+            'channel': interaction.channel
+        })()
+        return cooldown_mapping.get_bucket(mock_ctx.message)
         self.daily_bonus = 100
         self.work_min = 50
         self.work_max = 150
@@ -103,8 +114,8 @@ class Economy(commands.Cog):
         guild_id = str(interaction.guild.id)
         user_id = interaction.user.id
         
-        # Check cooldown
-        bucket = self.daily_cooldown.get_bucket(interaction)
+        # Check cooldown using the helper method
+        bucket = self._get_cooldown_bucket(interaction, self.daily_cooldown)
         retry_after = bucket.update_rate_limit()
         
         if retry_after:
@@ -151,8 +162,8 @@ class Economy(commands.Cog):
         guild_id = str(interaction.guild.id)
         user_id = interaction.user.id
         
-        # Check cooldown
-        bucket = self.work_cooldown.get_bucket(interaction)
+        # Check cooldown using the helper method
+        bucket = self._get_cooldown_bucket(interaction, self.work_cooldown)
         retry_after = bucket.update_rate_limit()
         
         if retry_after:

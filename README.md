@@ -4,9 +4,9 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Discord.py](https://img.shields.io/badge/discord.py-2.0+-blue.svg)](https://github.com/Rapptz/discord.py)
-[![License](https://img.shields.io/badge/License-GNU-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**Total Commands: 75+** | **Persistent Views** | **Production Ready** | **Music Playback**
+**Total Commands: 75+** | **Persistent Views** | **Production Ready** | **Robust Moderation**
 
 ---
 
@@ -279,23 +279,19 @@ Logged in as Synergy Bot#1234
 | `/automod [enabled] [anti_spam] [anti_raid] [spam_action]` | Configure auto-moderation | Administrator |
 | `/bannedwords <action> [word]` | Manage banned words list | Administrator |
 
-### 💰 Economy Commands (10)
+### 🔧 Role Management
 
-| Command | Description | Cooldown |
-|---------|-------------|----------|
-| `/balance [user]` | Check balance | None |
-| `/daily` | Daily reward (100 coins) | 24 hours |
-| `/work` | Work for money (50-150) | 1 hour |
-| `/crime` | Risky crime (10-500) | 2 hours |
-| `/pay <user> <amount>` | Send money | None |
-| `/rob <user>` | Rob user (40% success) | None |
-| `/coinflip <amount> <heads/tails>` | Bet on coinflip | None |
-| `/slots <amount>` | Slot machine (up to x10) | None |
-| `/leaderboard [page]` | Top richest users | None |
-| `/setcurrency <name>` | Set custom currency | Admin |
+| Command | Description | Required Permission |
+|---------|-------------|---------------------|
+| `/admin_role @role` | Set the admin role | Administrator |
+| `/mod_role @role` | Add a moderator role | Administrator |
+| `/support_role @role` | Add a support role | Administrator |
+| `/role add @user @role` | Add role to user | Manage Roles |
+| `/role remove @user @role` | Remove role from user | Manage Roles |
 
 ### 🎫 Ticket Commands (6)
 
+{{ ... }}
 | Command | Description | Permission Required |
 |---------|-------------|-------------------|
 | `/ticketpanel [title] [description] [channel]` | Create panel with categories | Administrator |
@@ -1165,11 +1161,11 @@ This project is licensed under the MIT License.
 
 ## 🎉 Credits
 
-**Created by:** t_6200
+**Created by:** _0ryn_ (now customizable with `/setfooter`)
 
 **Synergy Bot** - The Ultimate All-in-One Discord Bot
 
-**Total: 65 commands** | **11 modules** | **Production Ready** ❌
+**Total: 65 commands** | **11 modules** | **Production Ready** ✅
 
 ---
 

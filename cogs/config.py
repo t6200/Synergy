@@ -26,20 +26,14 @@ class Config(commands.Cog):
     @app_commands.describe(
         log_channel="The channel where logs will be sent",
         ticket_category="The category where ticket channels will be created",
-        muted_role="The role to use for muting members",
-        support_roles="Roles that can manage tickets (comma-separated)",
-        mod_roles="Moderator roles (comma-separated)",
-        admin_roles="Admin roles (comma-separated)"
+        muted_role="The role to use for muting members"
     )
     async def setup_bot(
         self,
         interaction: discord.Interaction,
         log_channel: Optional[discord.TextChannel] = None,
         ticket_category: Optional[discord.CategoryChannel] = None,
-        muted_role: Optional[discord.Role] = None,
-        support_roles: Optional[str] = None,
-        mod_roles: Optional[str] = None,
-        admin_roles: Optional[str] = None
+        muted_role: Optional[discord.Role] = None
     ):
         guild_id = str(interaction.guild.id)
         if guild_id not in self.bot.data:
@@ -59,48 +53,6 @@ class Config(commands.Cog):
         if muted_role:
             config['muted_role'] = muted_role.id
             changes.append(f"✅ Muted role set to {muted_role.mention}")
-            
-        if support_roles:
-            role_ids = []
-            for role_id in support_roles.split(','):
-                try:
-                    role = interaction.guild.get_role(int(role_id.strip()))
-                    if role:
-                        role_ids.append(role.id)
-                except ValueError:
-                    pass
-            
-            if role_ids:
-                config['ticket_support_roles'] = role_ids
-                changes.append(f"✅ Set {len(role_ids)} support role(s)")
-            
-        if mod_roles:
-            role_ids = []
-            for role_id in mod_roles.split(','):
-                try:
-                    role = interaction.guild.get_role(int(role_id.strip()))
-                    if role:
-                        role_ids.append(role.id)
-                except ValueError:
-                    pass
-            
-            if role_ids:
-                config['mod_roles'] = role_ids
-                changes.append(f"✅ Set {len(role_ids)} moderator role(s)")
-                
-        if admin_roles:
-            role_ids = []
-            for role_id in admin_roles.split(','):
-                try:
-                    role = interaction.guild.get_role(int(role_id.strip()))
-                    if role:
-                        role_ids.append(role.id)
-                except ValueError:
-                    pass
-            
-            if role_ids:
-                config['admin_roles'] = role_ids
-                changes.append(f"✅ Set {len(role_ids)} admin role(s)")
         
         if not changes:
             return await interaction.response.send_message(
@@ -173,6 +125,97 @@ class Config(commands.Cog):
                 pass
             
         await interaction.response.send_message(embed=embed)
+
+    @app_commands.command(name="admin_role", description="Set the admin role")
+    @app_commands.checks.has_permissions(administrator=True)
+    @app_commands.describe(role="The role to set as admin")
+    async def set_admin_role(self, interaction: discord.Interaction, role: discord.Role):
+        """Set the admin role for the server"""
+        guild_id = str(interaction.guild.id)
+        if guild_id not in self.bot.data:
+            self.bot.data[guild_id] = {}
+        
+        self.bot.data[guild_id]['admin_roles'] = [role.id]
+        self.bot.save_data()
+        
+        await interaction.response.send_message(
+            embed=await self.get_embed(
+                interaction,
+                "Admin Role Set",
+                f"✅ Successfully set {role.mention} as an admin role.",
+                discord.Color.green()
+            )
+        )
+
+    @app_commands.command(name="mod_role", description="Set the moderator role")
+    @app_commands.checks.has_permissions(administrator=True)
+    @app_commands.describe(role="The role to set as moderator")
+    async def set_mod_role(self, interaction: discord.Interaction, role: discord.Role):
+        """Set the moderator role for the server"""
+        guild_id = str(interaction.guild.id)
+        if guild_id not in self.bot.data:
+            self.bot.data[guild_id] = {}
+        
+        if 'mod_roles' not in self.bot.data[guild_id]:
+            self.bot.data[guild_id]['mod_roles'] = []
+            
+        if role.id not in self.bot.data[guild_id]['mod_roles']:
+            self.bot.data[guild_id]['mod_roles'].append(role.id)
+            self.bot.save_data()
+            
+            await interaction.response.send_message(
+                embed=await self.get_embed(
+                    interaction,
+                    "Moderator Role Added",
+                    f"✅ Successfully added {role.mention} as a moderator role.",
+                    discord.Color.green()
+                )
+            )
+        else:
+            await interaction.response.send_message(
+                embed=await self.get_embed(
+                    interaction,
+                    "Role Already Set",
+                    f"⚠️ {role.mention} is already a moderator role.",
+                    discord.Color.orange()
+                ),
+                ephemeral=True
+            )
+
+    @app_commands.command(name="support_role", description="Add a support role")
+    @app_commands.checks.has_permissions(administrator=True)
+    @app_commands.describe(role="The role to add as support")
+    async def add_support_role(self, interaction: discord.Interaction, role: discord.Role):
+        """Add a support role for the server"""
+        guild_id = str(interaction.guild.id)
+        if guild_id not in self.bot.data:
+            self.bot.data[guild_id] = {}
+        
+        if 'ticket_support_roles' not in self.bot.data[guild_id]:
+            self.bot.data[guild_id]['ticket_support_roles'] = []
+            
+        if role.id not in self.bot.data[guild_id]['ticket_support_roles']:
+            self.bot.data[guild_id]['ticket_support_roles'].append(role.id)
+            self.bot.save_data()
+            
+            await interaction.response.send_message(
+                embed=await self.get_embed(
+                    interaction,
+                    "Support Role Added",
+                    f"✅ Successfully added {role.mention} as a support role.",
+                    discord.Color.green()
+                )
+            )
+        else:
+            await interaction.response.send_message(
+                embed=await self.get_embed(
+                    interaction,
+                    "Role Already Set",
+                    f"⚠️ {role.mention} is already a support role.",
+                    discord.Color.orange()
+                ),
+                ephemeral=True
+            )
 
     @app_commands.command(name="config", description="View the current configuration")
     @app_commands.checks.has_permissions(manage_guild=True)
