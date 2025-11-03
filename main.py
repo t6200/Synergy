@@ -43,7 +43,13 @@ class SynergyBot(commands.Bot):
             'cogs.tickets',
             'cogs.config',
             'cogs.logging',
-            'cogs.utility'
+            'cogs.utility',
+            'cogs.automod',
+            'cogs.welcome',
+            'cogs.leveling',
+            'cogs.reactionroles',
+            'cogs.giveaways',
+            'cogs.music'
         ]
         self.data = {}
         self.load_data()
