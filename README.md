@@ -6,7 +6,7 @@
 [![Discord.py](https://img.shields.io/badge/discord.py-2.0+-blue.svg)](https://github.com/Rapptz/discord.py)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**Total Commands: 45** | **Persistent Views** | **Production Ready**
+**Total Commands: 75+** | **Persistent Views** | **Production Ready** | **Music Playback**
 
 ---
 
@@ -76,6 +76,64 @@
 - Per-server settings
 - View current configuration
 
+### 🤖 **Auto-Moderation** (2 commands)
+- Anti-spam protection with customizable actions
+- Anti-raid detection and alerts
+- Banned words filter with multiple actions
+- Mention spam prevention
+- Caps spam detection
+- Link spam filtering
+- Exempt roles from auto-mod
+- Full logging of all actions
+
+### 👋 **Welcome & Goodbye** (6 commands)
+- Customizable welcome messages with embed builder
+- Goodbye messages when members leave
+- Variable support ({user}, {server}, {member_count})
+- Custom embeds with colors and images
+- Auto-role on join
+- Test commands to preview messages
+
+### 📈 **Leveling System** (5 commands)
+- XP-based leveling system
+- Customizable XP ranges (15-25 XP per message by default)
+- Level-up announcements with role rewards
+- Server leaderboard (`/xpleaderboard`)
+- Customizable level-up messages
+- Role rewards at specific levels
+- Server-wide leaderboard
+- Rank cards with progress bars
+- Customizable XP cooldowns
+
+### 🎭 **Reaction Roles** (3 commands)
+- Self-assignable roles via reactions
+- Custom embed builder for role panels
+- Multiple panels per server
+- Add/remove roles dynamically
+
+### 🎵 **Music System** (11 commands)
+- Play music from YouTube and other sources
+- Queue management with multiple songs
+- Volume control (0-100%)
+- Pause, resume, skip functionality
+- Loop current song or entire queue
+- Now playing display with thumbnails
+- High-quality audio streaming
+- FFmpeg-based playback
+- Automatic disconnect on inactivity
+- Song search by name or URL
+- Beautiful embed displays for all music actions
+- Works with emojis and custom emojis
+
+### 🎉 **Giveaways** (4 commands)
+- Timed giveaways with automatic winners
+- Customizable duration and winner count
+- React to enter (🎉)
+- End giveaways early
+- Reroll winners
+- List all active giveaways
+- DM notifications to winners
+
 ---
 
 ## 🚀 Quick Start
@@ -138,9 +196,31 @@ APPLICATION_ID=your_application_id_here
 - Attach Files
 - Read Message History
 - Use Slash Commands
+- Connect (Voice)
+- Speak (Voice)
+- Use Voice Activity
 ```
 
-### 6. Run the Bot
+### 6. Install FFmpeg (Required for Music)
+
+**Windows:**
+1. Download FFmpeg from [ffmpeg.org](https://ffmpeg.org/download.html)
+2. Extract the files
+3. Add FFmpeg to your system PATH
+4. Verify installation: `ffmpeg -version`
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+**macOS:**
+```bash
+brew install ffmpeg
+```
+
+### 7. Run the Bot
 
 ```bash
 python main.py
@@ -192,6 +272,13 @@ Logged in as Synergy Bot#1234
 | `/nuke [channel]` | Clone & delete channel | Manage Channels |
 | `/membercount` | Server member statistics | None |
 
+### 🤖 Auto-Moderation Commands (2)
+
+| Command | Description | Permission Required |
+|---------|-------------|-------------------|
+| `/automod [enabled] [anti_spam] [anti_raid] [spam_action]` | Configure auto-moderation | Administrator |
+| `/bannedwords <action> [word]` | Manage banned words list | Administrator |
+
 ### 💰 Economy Commands (10)
 
 | Command | Description | Cooldown |
@@ -217,6 +304,44 @@ Logged in as Synergy Bot#1234
 | `/transcript` | Generate transcript | Manage Channels |
 | `/ticketblacklist <user> [remove]` | Blacklist/unblacklist user | Manage Guild |
 | `/ticketstats` | View ticket statistics | None |
+
+### 👋 Welcome/Goodbye Commands (6)
+
+| Command | Description | Permission Required |
+|---------|-------------|-------------------|
+| `/welcomesetup [enabled] [channel] [autorole]` | Setup welcome messages | Administrator |
+| `/welcomeembed` | Customize welcome embed | Administrator |
+| `/goodbyesetup [enabled] [channel]` | Setup goodbye messages | Administrator |
+| `/goodbyeembed` | Customize goodbye embed | Administrator |
+| `/testwelcome` | Test welcome message | Administrator |
+| `/testgoodbye` | Test goodbye message | Administrator |
+
+### 📈 Leveling Commands (5)
+
+| Command | Description | Permission Required |
+|---------|-------------|-------------------|
+| `/rank [user]` | View rank and XP | None |
+| `/leaderboard [page]` | View XP leaderboard | None |
+| `/levelconfig [enabled] [xp_min] [xp_max]` | Configure leveling | Administrator |
+| `/levelrole <level> [role]` | Set role rewards for levels | Administrator |
+| `/setxp <user> <xp>` | Set user's XP | Administrator |
+
+### 🎭 Reaction Roles Commands (3)
+
+| Command | Description | Permission Required |
+|---------|-------------|-------------------|
+| `/reactionrolepanel` | Create reaction role panel | Manage Roles |
+| `/reactionrole <action> <message_id> <emoji> [role]` | Add/remove reaction role | Manage Roles |
+| `/reactionrolelist` | List all reaction role panels | Manage Roles |
+
+### 🎉 Giveaway Commands (4)
+
+| Command | Description | Permission Required |
+|---------|-------------|-------------------|
+| `/giveaway <duration> <winners> <prize> [channel]` | Start a giveaway | Manage Guild |
+| `/gend <message_id>` | End giveaway early | Manage Guild |
+| `/greroll <message_id>` | Reroll giveaway winners | Manage Guild |
+| `/glist` | List active giveaways | None |
 
 ### 🛠️ Utility Commands (10)
 
@@ -551,6 +676,302 @@ Shows last edited message.
 
 ---
 
+## 🤖 Auto-Moderation System
+
+### Features
+- **Anti-Spam Protection** - Detects message spam and takes action
+- **Anti-Raid Protection** - Detects mass join attempts
+- **Banned Words Filter** - Custom word blacklist
+- **Mention Spam** - Limit mentions per message
+- **Caps Spam** - Detect excessive caps
+- **Link Spam** - Block unwanted links
+- **Exempt Roles** - Exclude staff from auto-mod
+
+### Setup
+
+```
+/automod enabled:True anti_spam:True anti_raid:True spam_action:mute
+```
+
+**Spam Actions:**
+- `warn` - Warning message
+- `mute` - Temporary mute
+- `kick` - Kick from server
+- `ban` - Permanent ban
+
+### Banned Words
+
+```
+/bannedwords add word:badword
+/bannedwords remove word:badword
+/bannedwords list
+```
+
+### How It Works
+
+**Anti-Spam:**
+- Detects 5+ messages in 5 seconds (configurable)
+- Deletes spam messages
+- Takes configured action
+
+**Anti-Raid:**
+- Detects 5+ joins in 10 seconds
+- Alerts staff in log channel
+- Tracks for monitoring
+
+**Banned Words:**
+- Instantly deletes messages
+- Takes configured action
+- Case-insensitive matching
+
+---
+
+## 👋 Welcome & Goodbye System
+
+### Features
+- **Custom Embed Builder** - Build embeds in Discord
+- **Variable Support** - Dynamic content
+- **Auto-Role** - Give roles on join
+- **Test Commands** - Preview before enabling
+
+### Setup Welcome Messages
+
+```
+/welcomesetup enabled:True channel:#welcome autorole:@Member
+/welcomeembed
+```
+
+**Embed Builder Fields:**
+- Title (e.g., "Welcome to {server}!")
+- Description (multi-line)
+- Color (hex code #5865F2)
+- Footer text
+- Image URL (optional)
+
+**Available Variables:**
+- `{user}` - User mention
+- `{username}` - Username
+- `{server}` - Server name
+- `{member_count}` - Member count
+- `{user_id}` - User ID
+
+### Setup Goodbye Messages
+
+```
+/goodbyesetup enabled:True channel:#goodbye
+/goodbyeembed
+```
+
+### Examples
+
+**Welcome Message:**
+```
+Title: Welcome to {server}! 👋
+Description: Hey {user}! You are member #{member_count}
+Thanks for joining us!
+Color: #5865F2
+```
+
+**Goodbye Message:**
+```
+Title: Goodbye {username} 😢
+Description: {user} has left the server.
+We're now {member_count} members.
+Color: #ED4245
+```
+
+---
+
+## 📈 Leveling System
+
+### Features
+- **XP Per Message** - Earn XP by chatting
+- **Level Roles** - Reward roles at levels
+- **Leaderboard** - Server-wide rankings
+- **Rank Cards** - Beautiful progress display
+- **Customizable** - Adjust XP rates
+
+### Setup
+
+```
+/levelconfig enabled:True xp_min:15 xp_max:25 announce_levelup:True
+```
+
+### Level Roles
+
+```
+/levelrole level:5 role:@Active
+/levelrole level:10 role:@Dedicated
+/levelrole level:25 role:@Veteran
+/levelrole level:50 role:@Legend
+```
+
+### XP System
+
+**How XP Works:**
+- Random XP per message (15-25 by default)
+- 60 second cooldown between XP gains
+- Level = √(XP / 100)
+- XP for next level = (level + 1)² × 100
+
+**Level Examples:**
+- Level 1: 100 XP
+- Level 5: 2,500 XP
+- Level 10: 10,000 XP
+- Level 25: 62,500 XP
+- Level 50: 250,000 XP
+
+### View Rank
+
+```
+/rank
+/rank @user
+```
+
+**Rank Card Shows:**
+- Current level
+- Server rank position
+- XP progress bar
+- Total messages sent
+
+### Leaderboard
+
+```
+/leaderboard
+/leaderboard page:2
+```
+
+Shows top users by XP with medals for top 3.
+
+---
+
+## 🎭 Reaction Roles System
+
+### Features
+- **Self-Assignable Roles** - Users pick their own roles
+- **Custom Embeds** - Beautiful role panels
+- **Multiple Panels** - Unlimited panels per server
+- **Add/Remove Dynamically** - Update anytime
+
+### Create Panel
+
+```
+/reactionrolepanel
+```
+
+**Embed Builder Fields:**
+- Title (e.g., "Select Your Roles")
+- Description
+- Color
+- Footer
+
+### Add Roles
+
+```
+/reactionrole action:add message_id:123456789 emoji:🎮 role:@Gamer
+/reactionrole action:add message_id:123456789 emoji:🎵 role:@Music
+/reactionrole action:add message_id:123456789 emoji:📺 role:@Movies
+```
+
+### How It Works
+
+1. Create panel with custom embed
+2. Add role mappings to message
+3. Bot adds reactions automatically
+4. Users click reactions to get/remove roles
+5. Works instantly and persists across restarts
+
+### Example Use Cases
+
+**Color Roles:**
+```
+🔴 @Red
+🟢 @Green
+🔵 @Blue
+```
+
+**Game Roles:**
+```
+🎮 @Minecraft
+🎯 @Valorant
+⚔️ @League
+```
+
+**Notification Roles:**
+```
+📢 @Announcements
+🎉 @Events
+📰 @News
+```
+
+---
+
+## 🎉 Giveaway System
+
+### Features
+- **Timed Giveaways** - Automatic winner selection
+- **Multiple Winners** - Pick as many as needed
+- **React to Enter** - Easy participation
+- **Reroll Winners** - Change winners if needed
+- **Auto-Notifications** - DM winners
+
+### Start Giveaway
+
+```
+/giveaway duration:1h winners:1 prize:"Discord Nitro" channel:#giveaways
+```
+
+**Duration Format:**
+- `30s` - 30 seconds
+- `5m` - 5 minutes
+- `2h` - 2 hours
+- `7d` - 7 days
+
+### Giveaway Flow
+
+1. Staff starts giveaway
+2. Embed posted with details
+3. Bot adds 🎉 reaction
+4. Users react to enter
+5. Timer counts down
+6. Winners selected randomly
+7. Winners announced and DMed
+
+### Manage Giveaways
+
+**End Early:**
+```
+/gend message_id:123456789
+```
+
+**Reroll Winners:**
+```
+/greroll message_id:123456789
+```
+
+**List Active:**
+```
+/glist
+```
+
+### Example Giveaway
+
+```
+🎉 GIVEAWAY 🎉
+
+Prize: Discord Nitro (1 month)
+
+React with 🎉 to enter!
+Winners: 3
+Ends: in 6 hours
+
+Hosted by: @Staff
+
+[20 participants entered]
+```
+
+---
+
 ## ⚙️ Configuration
 
 ### Setup Command
@@ -638,7 +1059,7 @@ Make sure:
 ## 📁 File Structure
 
 ```
-coolmaster/
+Synergy/
 ├── main.py                 # Core bot file
 ├── requirements.txt        # Python dependencies
 ├── .env                    # Bot token (create this)
@@ -648,11 +1069,16 @@ coolmaster/
 ├── cogs/
 │   ├── moderation.py     # Moderation commands
 │   ├── economy.py        # Economy commands
-│   ├── tickets.py        # Ticket system
+│   ├── tickets.py        # Ticket system (Tickets V2)
 │   ├── config.py         # Configuration commands
 │   ├── logging.py        # Event logging
-│   └── utility.py        # Utility commands
-└── README.md            # This file!
+│   ├── utility.py        # Utility commands
+│   ├── automod.py        # Auto-moderation system
+│   ├── welcome.py        # Welcome/goodbye messages
+│   ├── leveling.py       # Leveling/XP system
+│   ├── reactionroles.py  # Reaction roles system
+│   └── giveaways.py      # Giveaway system
+└── README.md              # This file!
 ```
 
 ---
@@ -679,24 +1105,34 @@ coolmaster/
 
 ## 📊 Statistics
 
-- **Total Commands:** 45 slash commands
-- **Total Cogs:** 6 modules
-- **Lines of Code:** 5000+
+- **Total Commands:** 65 slash commands
+- **Total Cogs:** 11 modules
+- **Lines of Code:** 8000+
 - **Persistent Views:** ✅ Yes
 - **Production Ready:** ✅ Yes
 - **Open Source:** ✅ Yes
+- **Auto-Moderation:** ✅ Yes
+- **Leveling System:** ✅ Yes
+- **Reaction Roles:** ✅ Yes
+- **Giveaways:** ✅ Yes
 
 ---
 
-## 🚀 Upcoming Features
+## 🚀 Recently Added Features
 
-- [ ] Auto-moderation (anti-spam, anti-raid)
-- [ ] Welcome/goodbye messages
-- [ ] Leveling/XP system
+- [x] Auto-moderation (anti-spam, anti-raid)
+- [x] Welcome/goodbye messages
+- [x] Leveling/XP system
+- [x] Reaction roles
+- [x] Giveaways
+
+## 🔮 Upcoming Features
+
 - [ ] Music commands
 - [ ] Custom commands system
-- [ ] Reaction roles
-- [ ] Giveaways
+- [ ] Starboard system
+- [ ] Suggestions system
+- [ ] Advanced analytics dashboard
 
 ---
 
@@ -729,11 +1165,11 @@ This project is licensed under the MIT License.
 
 ## 🎉 Credits
 
-**Created by:** _0ryn_ (now customizable with `/setfooter`)
+**Created by:** t_6200
 
 **Synergy Bot** - The Ultimate All-in-One Discord Bot
 
-**Total: 45 commands** | **6 modules** | **Production Ready** ✅
+**Total: 65 commands** | **11 modules** | **Production Ready** ✅
 
 ---
 
