@@ -29,6 +29,142 @@ class Utility(commands.Cog):
         embed.set_footer(text=footer_text, icon_url=footer_icon)
         return embed
     
+    @app_commands.command(name="help", description="Show all available commands")
+    async def help_command(self, interaction: discord.Interaction):
+        """Show all available commands"""
+        # Create embed
+        embed = await self.get_embed(
+            interaction,
+            "📚 Synergy Bot Help",
+            "Here are all the available commands organized by category:",
+            discord.Color.blue()
+        )
+        
+        # Add command categories
+        embed.add_field(
+            name="🔨 Moderation",
+            value="• `/ban` - Ban a user from the server\n"
+                  "• `/kick` - Kick a user from the server\n"
+                  "• `/mute` - Mute a user\n"
+                  "• `/timeout` - Timeout a user (Discord native)\n"
+                  "• `/tempban` - Temporarily ban a user\n"
+                  "• `/warn` - Warn a user\n"
+                  "• `/warnings` - View a user's warnings\n"
+                  "• `/clearwarnings` - Clear all warnings for a user\n"
+                  "• `/purge` - Delete multiple messages\n"
+                  "• `/lock` - Lock a channel\n"
+                  "• `/unlock` - Unlock a channel\n"
+                  "• `/slowmode` - Set channel slowmode\n"
+                  "• `/nuke` - Clone and delete a channel",
+            inline=False
+        )
+        
+        embed.add_field(
+            name="🎫 Tickets",
+            value="• `/ticketpanel` - Create an advanced ticket panel\n"
+                  "• `/adduser` - Add a user to the ticket\n"
+                  "• `/close` - Close the current ticket\n"
+                  "• `/transcript` - Generate a ticket transcript\n"
+                  "• `/ticketblacklist` - Blacklist a user from tickets\n"
+                  "• `/ticketstats` - View ticket statistics",
+            inline=False
+        )
+        
+        embed.add_field(
+            name="💰 Economy",
+            value="• `/balance` - Check your or another user's balance\n"
+                  "• `/daily` - Claim your daily bonus\n"
+                  "• `/work` - Work to earn money\n"
+                  "• `/crime` - Commit a crime to earn money\n"
+                  "• `/rob` - Attempt to rob another user\n"
+                  "• `/pay` - Send money to another user\n"
+                  "• `/coinflip` - Flip a coin and bet money\n"
+                  "• `/slots` - Play the slot machine\n"
+                  "• `/leaderboard` - Show the economy leaderboard\n"
+                  "• `/setcurrency` - Set server currency name (Admin)",
+            inline=False
+        )
+        
+        embed.add_field(
+            name="📊 Leveling",
+            value="• `/rank [user]` - View your or someone's rank card\n"
+                  "• `/xpleaderboard [page]` - View the XP leaderboard\n"
+                  "• `/levelconfig` - Configure leveling settings\n"
+                  "• `/levelrole` - Set role rewards for levels\n"
+                  "• `/setxp` - Set a user's XP (Admin only)",
+            inline=False
+        )
+        
+        embed.add_field(
+            name="🎁 Giveaways",
+            value="• `/giveaway` - Start a giveaway\n"
+                  "• `/gend` - End a giveaway early\n"
+                  "• `/greroll` - Reroll giveaway winners\n"
+                  "• `/glist` - List active giveaways",
+            inline=False
+        )
+        
+        embed.add_field(
+            name="👋 Welcome & Goodbye",
+            value="• `/welcomesetup` - Setup welcome messages\n"
+                  "• `/welcomeembed` - Customize welcome embed\n"
+                  "• `/testwelcome` - Test welcome message\n"
+                  "• `/goodbyesetup` - Setup goodbye messages\n"
+                  "• `/goodbyeembed` - Customize goodbye embed\n"
+                  "• `/testgoodbye` - Test goodbye message",
+            inline=False
+        )
+        
+        embed.add_field(
+            name="🛡️ Auto-Moderation",
+            value="• `/automod` - Configure auto-moderation settings\n"
+                  "• `/bannedwords` - Manage banned words list",
+            inline=False
+        )
+        
+        embed.add_field(
+            name="🎵 Music",
+            value="• `/join` - Join your voice channel\n"
+                  "• `/leave` - Leave the voice channel\n"
+                  "• `/play <query>` - Play a song from YouTube\n"
+                  "• `/pause` - Pause the current song\n"
+                  "• `/resume` - Resume the paused song\n"
+                  "• `/skip` - Skip the current song\n"
+                  "• `/stop` - Stop music and clear queue\n"
+                  "• `/volume <0-100>` - Change the volume\n"
+                  "• `/nowplaying` - Show current song\n"
+                  "• `/queue` - Show the music queue\n"
+                  "• `/loop` - Toggle loop for current song",
+            inline=False
+        )
+        
+        embed.add_field(
+            name="🔧 Utility",
+            value="• `/help` - Show this help message\n"
+                  "• `/userinfo [user]` - Get user information\n"
+                  "• `/serverinfo` - Get server information\n"
+                  "• `/avatar [user]` - Get a user's avatar\n"
+                  "• `/roleinfo` - Get role information\n"
+                  "• `/emojiinfo` - Get emoji information\n"
+                  "• `/membercount` - Show server member count\n"
+                  "• `/snipe` - View last deleted message\n"
+                  "• `/editsnipe` - View last edited message\n"
+                  "• `/poll` - Create a poll\n"
+                  "• `/remind` - Set a reminder\n"
+                  "• `/invite` - Get the bot's invite link",
+            inline=False
+        )
+        
+        embed.add_field(
+            name="⚙️ Configuration",
+            value="• `/setup` - Configure bot settings\n"
+                  "• `/config` - View current configuration\n"
+                  "• `/setfooter` - Set the bot's footer text and icon",
+            inline=False
+        )
+        
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+    
     @app_commands.command(name="userinfo", description="Get information about a user")
     @app_commands.describe(user="The user to get information about (defaults to you)")
     async def userinfo(self, interaction: discord.Interaction, user: Optional[discord.Member] = None):
